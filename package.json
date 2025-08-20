@@ -1,0 +1,15 @@
+{
+  "name": "javascript-backend-course",
+  "version": "1.0.0",
+  "description": "learning backend on chai aur code backend series",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "backend",
+    "javascript"
+  ],
+  "author": "usama usman",
+  "license": "ISC"
+}
