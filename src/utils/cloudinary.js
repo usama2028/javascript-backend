@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from cloudinary
+import { v2 as cloudinary } from "cloudinary"
 import fs from "fs"
 
 
@@ -23,5 +23,8 @@ const uploadOnCloudnary=async (localfilepath)=>{
         return response
     } catch (error) {
         fs.unlinkSync(localfilepath) //remove the locally saved temporary file as the upload opertaion got failed    }
+        return null
     }
 }
+
+export {uploadOnCloudnary}
