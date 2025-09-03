@@ -19,7 +19,7 @@ app.use(express.static("public"))
 // import routers
 import {userRouter} from "./routes/user.route.js"
 
-app.use("/api/users",userRouter)
+app.use("/api/v1/users/",userRouter)
 
 
 

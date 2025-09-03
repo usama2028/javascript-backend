@@ -1,8 +1,8 @@
-import { ascyncHandler } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js"
 import { User } from "../models/user.model.js";
-import { uploadOnCloudnary } from "../utils/cloudinary.js";
-import { ApiResponse } from "../utils/apiResponse.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 
 
 
@@ -16,44 +16,47 @@ import { ApiResponse } from "../utils/apiResponse.js"
 // check for user creation
 // return user
 
-const registerUser=ascyncHandler(async(req,res)=>{
+const registerUser=asyncHandler(async(req,res)=>{
 
     const { userName,email,password,fullName }=req.body
-    console.log(email)
 
     if (
         [fullName,userName,email,password].some((field)=>field?.trim()==="")
     ) {
         throw new ApiError(400,"All Fields are Required.")
     }
-    if(!email.inculde("@")){
-        throw new ApiError(400,"Invalid email format.")
-    }
 
-    const existedUser=User.findOne({
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        throw new ApiError(400, "Invalid email format.");
+}
+
+    const existedUser=await User.findOne({
         $or:[{ email },{ userName }]
     })
     if (existedUser) {
         throw new ApiError(409,"User with this email or userName is already exists.")
     }
 
-    const avatarLocalPath=requestAnimationFrame.files?.avatar[0]?.path;
-    const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    const avatarLocalPath=req.files?.avatar?.[0]?.path;
+    const coverImageLocalPath=req.files?.coverImage?.[0]?.path;
+
 
     if (!avatarLocalPath) {
         throw new ApiError(400,"Avatar file is required.")
     }
 
-    const avatar=await uploadOnCloudnary(avatarLocalPath)
-    const coverImage=await uploadOnCloudnary(coverImageLocalPath)
-    if (!avatar) {
-        throw new ApiError(400,"Avatar file is required.")
+    const avatar=await uploadOnCloudinary(avatarLocalPath)
+    const coverImage=await uploadOnCloudinary(coverImageLocalPath)
+
+    if (!avatar.secure_url) {
+        throw new ApiError(400,"Failed to upload Avatar")
     }
 
     const user=await User.create({
         fullName,
-        avatar:avatar.url,
-        coverImage:coverImage?.url || "",
+        avatar:avatar.secure_url,
+        coverImage:coverImage?.secure_url || "",
         userName,
         email,
         password
@@ -66,8 +69,10 @@ const registerUser=ascyncHandler(async(req,res)=>{
     }
 
     return res.status(201).json(
-        new ApiResponse(200,createdUser,"user created sucessfully.")
+        new ApiResponse(201,createdUser,"user created sucessfully.")
     )
 
 })
+
+
 export {registerUser}
