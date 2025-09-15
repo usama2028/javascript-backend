@@ -279,14 +279,14 @@ const updateCoverImage=asyncHandler( async(req,res)=>{
 
 
 const getUserProfileInfo=asyncHandler( async(req,res)=>{
-    const userName=req.params
-    if (!userName?.trim()) {
+    const {userName}=req.params
+    if (!userName) {
         throw new ApiError(400,"User name is missing.")
     }
     const channel=await User.aggregate([
         {
             $match:{
-                userName:userName.toLowerCase()
+                userName:userName
             }
         },
         {
@@ -315,9 +315,9 @@ const getUserProfileInfo=asyncHandler( async(req,res)=>{
                 },
                 isSubscribed:{
                     $cond:{
-                        $if:{$in:[req.user?._id,"$subscribers.subscriber"]},
-                        $then:true,
-                        $else:false
+                        if:{$in:[req.user?._id,"$subscribers.subscriber"]},
+                        then:true,
+                        else:false
                     }
                 }
             }
@@ -335,7 +335,8 @@ const getUserProfileInfo=asyncHandler( async(req,res)=>{
             }
         }
     ])
-    if (!channel?.length) {
+
+    if (!channel) {
         throw new ApiError(400,"channel does not exists.")
     }
     return res.status(200).json(
@@ -378,7 +379,7 @@ const getWatchHistory=asyncHandler( async(req,res)=>{
                     },
                     {
                         $addFields:{
-                            $first:"$owner"
+                            first:"$owner"
                         }
                     }
                 ]
@@ -387,7 +388,7 @@ const getWatchHistory=asyncHandler( async(req,res)=>{
     ])
 
     return res.status(200).json(
-        new ApiResponse(200,user[0].watcHistory,"watch history fetched sucessfully.")
+        new ApiResponse(200,user[0].WatcHistory,"watch history fetched sucessfully.")
     )
 })
 

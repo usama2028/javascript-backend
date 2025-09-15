@@ -48,7 +48,7 @@ userRouter.route("/updateAvatar").patch(
     updateAvatarImage
 )
 userRouter.route("/userInfo").get(verifyJWT,getUserInfo)
-userRouter.route("/getUserChannel/:userName").get(verifyJWT,getUserProfileInfo)
+userRouter.route("/userChannel/:userName").get(verifyJWT,getUserProfileInfo)
 userRouter.route("/watcHistory").get(verifyJWT,getWatchHistory)
 
 export  {userRouter}

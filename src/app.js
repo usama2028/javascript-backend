@@ -18,9 +18,10 @@ app.use(express.static("public"))
 
 // import routers
 import {userRouter} from "./routes/user.route.js"
+import videoRouter from "./routes/video.route.js"
+
 
 app.use("/api/v1/users/",userRouter)
-
-
+app.use("/api/v1/video/",videoRouter)
 
 export { app }
