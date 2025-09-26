@@ -22,7 +22,7 @@ import videoRouter from "./routes/video.route.js"
 import SubscriptionRoutes from "./routes/subscriber.route.js";
 import { ApiError } from "./utils/apiError.js";
 import commentRouter from "./routes/comment.route.js"
-import  healthCheckRouter  from "./controllers/healthCare.controller.js";
+import  healthCheckRouter  from "./routes/healthCare.route.js";
 import likeRouter from "./routes/like.route.js"
 import playlistRouter from "./routes/playlist.route.js"
 import tweetRouter from "./routes/tweet.route.js"
